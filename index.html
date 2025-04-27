@@ -12,7 +12,8 @@
 function requestApiFromExtension(url) {
     window.postMessage({
         action: 'request-api',
-        url: url
+        url: url,
+        requestId: Date.now()
     }, window.origin);
 }
 
