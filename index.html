@@ -7,14 +7,12 @@
 
 
   <script>
-    window.addEventListener('message', function(event) {
-      if (event.data.type === 'proxyFetchReady') {
-        console.log("Pagina web: proxyFetch è pronto, ora chiamo.");
-        window.proxyFetch('https://www.wikidata.org/w/api.php?action=query&meta=tokens&format=json')
-          .then(response => response.json())
-          .then(data => console.log('Dati ricevuti:', data))
-          .catch(error => console.error('Errore proxyFetch:', error));
-      }
+    wapiFetch('https://www.wikidata.org/w/api.php?action=query&meta=tokens&format=json')
+    .then(data => {
+        console.log('Dati ricevuti:', data);
+    })
+    .catch(error => {
+        console.error('Errore nella chiamata API:', error);
     });
   </script>
 </body>
