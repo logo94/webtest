@@ -4,14 +4,11 @@
   
   
 <script>
-  // Puoi usare immediatamente l'API
-  if (window.extensionProxy) {
-    window.extensionProxy.fetch('https://www.wikidata.org/w/api.php?action=query&meta=tokens&format=json')
-      .then(data => console.log('Dati:', data))
-      .catch(err => console.error('Errore:', err));
-  } else {
-    console.error('Estensione non rilevata!');
-  }
+
+  window.extensionFetch('https://www.wikidata.org/w/api.php?action=query&meta=tokens&format=json')
+  .then(data => console.log('Dati ricevuti:', data))
+  .catch(err => console.error('Errore:', err));
+
 </script>
 </body>
 </html>
