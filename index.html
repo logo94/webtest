@@ -8,13 +8,27 @@
 
   <script>
 
-callApiThroughExtension('https://www.wikidata.org/w/api.php?action=query&meta=tokens&format=json')
-  .then(data => {
-      console.log('Risultato API:', data);
-  })
-  .catch(error => {
-      console.error('Errore API:', error);
-  });
+const requestId = new Date().getTime();
+
+// Invia un messaggio alla pagina per richiedere l'API tramite content.js
+window.postMessage({
+    action: 'request-api',
+    url: 'https://www.wikidata.org/w/api.php?action=query&meta=tokens&format=json',
+    requestId: requestId
+}, window.origin);
+
+// Ascolta la risposta dal content.js
+window.addEventListener('message', function(event) {
+    if (event.origin !== window.origin || !event.data || event.data.action !== 'api-response' || event.data.requestId !== requestId) {
+        return; // Ignora risposte non correlate
+    }
+
+    // Gestisci la risposta (successo o errore)
+    if (event.data.success) {
+        console.log('Risultato API:', event.data.data);
+    } else {
+        console.error('Errore API:', event.data.error);
+    }
 
 
 
