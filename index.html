@@ -8,19 +8,32 @@
 
   <script>
 
-    // Funzione per inviare la richiesta all'estensione (content script)
+    // Funzione per inviare il messaggio a content.js
 function callApiThroughExtension(apiUrl) {
     return new Promise((resolve, reject) => {
-        chrome.runtime.sendMessage(
-            { action: "request-api", url: apiUrl },  // Invia il messaggio al content.js
-            (response) => {
-                if (response.success) {
-                    resolve(response.data);  // Risposta ricevuta dall'estensione
-                } else {
-                    reject(response.error);  // Errore
-                }
+        // Crea un ID per la richiesta
+        const requestId = Date.now();
+
+        // Funzione per ricevere la risposta da content.js
+        window.addEventListener('message', function handleMessage(event) {
+            // Assicurati che il messaggio arrivi dal content script
+            if (event.origin !== window.origin || !event.data || event.data.requestId !== requestId) {
+                return;
             }
-        );
+
+            // Gestisci la risposta
+            if (event.data.success) {
+                resolve(event.data.data);
+            } else {
+                reject(event.data.error);
+            }
+
+            // Rimuovi l'event listener per evitare che venga eseguito più volte
+            window.removeEventListener('message', handleMessage);
+        });
+
+        // Invia il messaggio a content.js con l'URL dell'API
+        window.postMessage({ action: 'request-api', url: apiUrl, requestId: requestId }, window.origin);
     });
 }
 
@@ -32,6 +45,8 @@ callApiThroughExtension('https://www.wikidata.org/w/api.php?action=query&meta=to
     .catch(error => {
         console.error('Errore nella chiamata API:', error);
     });
+
+
     
   </script>
 </body>
