@@ -7,19 +7,15 @@
 
 
   <script>
-    window.proxyFetch = async (url, options = {}) => {
-      console.log('[INLINE - proxyFetch] Intercettata chiamata a:', url, options);
-      // Simula una risposta semplice per il test
-      return new Response(JSON.stringify({ message: "Risposta simulata dal proxy inline" }), { status: 200 });
-    };
-  </script>
-  <script>
-    window.onload = function() {
-      window.proxyFetch('https://www.wikidata.org/w/api.php?action=query&meta=tokens&format=json')
-        .then(response => response.json())
-        .then(data => console.log('Dati ricevuti:', data))
-        .catch(error => console.error('Errore proxyFetch:', error));
-    };
+    window.addEventListener('message', function(event) {
+      if (event.data.type === 'proxyFetchReady') {
+        console.log("Pagina web: proxyFetch è pronto, ora chiamo.");
+        window.proxyFetch('https://www.wikidata.org/w/api.php?action=query&meta=tokens&format=json')
+          .then(response => response.json())
+          .then(data => console.log('Dati ricevuti:', data))
+          .catch(error => console.error('Errore proxyFetch:', error));
+      }
+    });
   </script>
 </body>
 </html>
