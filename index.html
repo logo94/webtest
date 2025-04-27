@@ -10,9 +10,8 @@
 
   <script>
     // Gestisci il click del bottone per inviare la richiesta
-    document.getElementById('call-api-btn').addEventListener('click', function() {
-        const url = document.getElementById('api-url').value;  // Ottieni l'URL dall'input
-        if (url) {
+    const wapiFetch = async ( url ) => {
+        return new Promise((resolve, reject) => {
             const requestId = new Date().getTime();  // Crea un ID univoco per tracciare la risposta
 
             // Invia il messaggio alla pagina per richiedere l'API tramite content.js
@@ -31,11 +30,23 @@
 
                 // Gestisci la risposta (successo o errore)
                 if (event.data.success) {
-                    console.log('Risultato API:', event.data.data);
+                    resolve(event.data.data);  // Risolvi la promise con i dati JSON
                 } else {
-                    console.error('Errore API:', event.data.error);
+                    reject(new Error(event.data.error));  // Rifiuta la promise con l'errore
                 }
             });
+        });
+    }
+
+    
+
+    // Gestisci il click del bottone per inviare la richiesta
+    document.getElementById('call-api-btn').addEventListener('click', async () => {
+        const url = document.getElementById('api-url').value;  // Ottieni l'URL dall'input
+        if (url) {
+            // Usa la funzione per inviare la richiesta all'estensione
+            const res = await wapiFetch(url)
+            console.log(res);  // Gestisci la risposta;
         } else {
             console.log('URL non valido');
         }
