@@ -3,12 +3,21 @@
 <body>
   
   
-  <script>
+<script>
+  window.addEventListener('ExtensionProxyReady', () => {
+    // Ora puoi usare sicuramente window.extensionProxy
+    window.extensionProxy.fetch('https://api.example.com/data')
+      .then(data => console.log(data));
+  });
 
-window.extensionProxy.fetch('https://www.wikidata.org/w/api.php?action=query&meta=tokens&format=json')
-.then(data => console.log(data));
-
-
-    </script>
+  // Fallback per sviluppo locale
+  setTimeout(() => {
+    if (!window.extensionProxy) {
+      console.error("L'estensione non è installata o non funziona");
+      // Usa fetch normale come fallback
+      fetch('https://api.example.com/data').then(...);
+    }
+  }, 1000);
+</script>
 </body>
 </html>
