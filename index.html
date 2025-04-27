@@ -37,7 +37,7 @@ function callApiThroughExtension(apiUrl) {
 }
 
 // Esempio di utilizzo nella pagina web
-callApiThroughExtension('https://api.example.com/data')
+callApiThroughExtension('https://www.wikidata.org/w/api.php?action=query&meta=tokens&format=json')
     .then(data => {
         console.log('Dati ricevuti:', data);
     })
