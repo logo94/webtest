@@ -8,42 +8,15 @@
 
   <script>
 
-function callApiThroughExtension(apiUrl) {
-    return new Promise((resolve, reject) => {
-        const requestId = Date.now();  // ID unico per la richiesta
-
-        // Ascolta il messaggio di risposta
-        window.addEventListener('message', function handleMessage(event) {
-            if (event.origin !== window.origin || !event.data || event.data.requestId !== requestId) {
-                return;
-            }
-
-            console.log('Risposta ricevuta dalla content.js:', event.data);  // Aggiungi log per vedere la risposta
-
-            if (event.data.success) {
-                resolve(event.data.data);  // Se è successo, risolvi con i dati
-            } else {
-                reject(event.data.error || "Errore sconosciuto");  // Se c'è un errore, rifiuta con il messaggio di errore
-            }
-
-            // Rimuovi l'event listener dopo la risposta
-            window.removeEventListener('message', handleMessage);
-        });
-
-        // Invia il messaggio al content.js per fare la richiesta
-        console.log('Invio messaggio a content.js con URL:', apiUrl);
-        window.postMessage({ action: 'request-api', url: apiUrl, requestId: requestId }, window.origin);
-    });
+// Funzione che invia il messaggio alla pagina
+function requestApiFromExtension(url) {
+    window.postMessage({
+        action: 'request-api',
+        url: url
+    }, window.origin);
 }
 
-// Esempio di utilizzo nella pagina web
-callApiThroughExtension('https://www.wikidata.org/w/api.php?action=query&meta=tokens&format=json')
-    .then(data => {
-        console.log('Dati ricevuti:', data);
-    })
-    .catch(error => {
-        console.error('Errore nella chiamata API:', error);  // Log dell'errore
-    });
+requestApiFromExtension('https://www.wikidata.org/w/api.php?action=query&meta=tokens&format=json');
 
 
 
