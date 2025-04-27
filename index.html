@@ -7,13 +7,32 @@
 
 
   <script>
-    wapiFetch('https://www.wikidata.org/w/api.php?action=query&meta=tokens&format=json')
+
+    // Funzione per inviare la richiesta all'estensione (content script)
+function callApiThroughExtension(apiUrl) {
+    return new Promise((resolve, reject) => {
+        chrome.runtime.sendMessage(
+            { action: "request-api", url: apiUrl },  // Invia il messaggio al content.js
+            (response) => {
+                if (response.success) {
+                    resolve(response.data);  // Risposta ricevuta dall'estensione
+                } else {
+                    reject(response.error);  // Errore
+                }
+            }
+        );
+    });
+}
+
+// Esempio di utilizzo nella pagina web
+callApiThroughExtension('https://www.wikidata.org/w/api.php?action=query&meta=tokens&format=json')
     .then(data => {
         console.log('Dati ricevuti:', data);
     })
     .catch(error => {
         console.error('Errore nella chiamata API:', error);
     });
+    
   </script>
 </body>
 </html>
