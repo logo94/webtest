@@ -5,7 +5,7 @@
   
 <script>
 
-  window.wapiFetch('https://www.wikidata.org/w/api.php?action=query&meta=tokens&format=json')
+  fetch('https://www.wikidata.org/w/api.php?action=query&meta=tokens&format=json')
   .then(data => console.log('Dati ricevuti:', data))
   .catch(err => console.error('Errore:', err));
 
