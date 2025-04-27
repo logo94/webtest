@@ -8,16 +8,13 @@
 
   <script>
 
-// Funzione che invia il messaggio alla pagina
-function requestApiFromExtension(url) {
-    window.postMessage({
-        action: 'request-api',
-        url: url,
-        requestId: Date.now()
-    }, window.origin);
-}
-
-requestApiFromExtension('https://www.wikidata.org/w/api.php?action=query&meta=tokens&format=json');
+callApiThroughExtension('https://www.wikidata.org/w/api.php?action=query&meta=tokens&format=json')
+  .then(data => {
+      console.log('Risultato API:', data);
+  })
+  .catch(error => {
+      console.error('Errore API:', error);
+  });
 
 
 
