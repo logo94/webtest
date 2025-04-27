@@ -8,10 +8,10 @@
   
 <script>
 
-  window.fetch('https://www.wikidata.org/w/api.php?action=query&meta=tokens&format=json')
-  .then(response => response.json())
-  .then(data => console.log('Dati ricevuti:', data))
-  .catch(error => console.error('Errore fetch:', error));
+  window.proxyFetch('https://www.wikidata.org/w/api.php?action=query&meta=tokens&format=json')
+      .then(response => response.json())
+      .then(data => console.log('Dati ricevuti:', data))
+      .catch(error => console.error('Errore proxyFetch:', error));
 
 </script>
 </body>
