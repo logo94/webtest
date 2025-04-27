@@ -8,43 +8,43 @@
 
   <script>
 
-    // Funzione per inviare il messaggio a content.js
 function callApiThroughExtension(apiUrl) {
     return new Promise((resolve, reject) => {
-        // Crea un ID per la richiesta
-        const requestId = Date.now();
+        const requestId = Date.now();  // ID unico per la richiesta
 
-        // Funzione per ricevere la risposta da content.js
+        // Ascolta il messaggio di risposta
         window.addEventListener('message', function handleMessage(event) {
-            // Assicurati che il messaggio arrivi dal content script
             if (event.origin !== window.origin || !event.data || event.data.requestId !== requestId) {
                 return;
             }
 
-            // Gestisci la risposta
+            console.log('Risposta ricevuta dalla content.js:', event.data);  // Aggiungi log per vedere la risposta
+
             if (event.data.success) {
-                resolve(event.data.data);
+                resolve(event.data.data);  // Se è successo, risolvi con i dati
             } else {
-                reject(event.data.error);
+                reject(event.data.error || "Errore sconosciuto");  // Se c'è un errore, rifiuta con il messaggio di errore
             }
 
-            // Rimuovi l'event listener per evitare che venga eseguito più volte
+            // Rimuovi l'event listener dopo la risposta
             window.removeEventListener('message', handleMessage);
         });
 
-        // Invia il messaggio a content.js con l'URL dell'API
+        // Invia il messaggio al content.js per fare la richiesta
+        console.log('Invio messaggio a content.js con URL:', apiUrl);
         window.postMessage({ action: 'request-api', url: apiUrl, requestId: requestId }, window.origin);
     });
 }
 
 // Esempio di utilizzo nella pagina web
-callApiThroughExtension('https://www.wikidata.org/w/api.php?action=query&meta=tokens&format=json')
+callApiThroughExtension('https://api.example.com/data')
     .then(data => {
         console.log('Dati ricevuti:', data);
     })
     .catch(error => {
-        console.error('Errore nella chiamata API:', error);
+        console.error('Errore nella chiamata API:', error);  // Log dell'errore
     });
+
 
 
     
