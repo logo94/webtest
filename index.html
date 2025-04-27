@@ -4,15 +4,15 @@
   <title>Test Fetch</title>
 </head>
 <body>
-  
-  
-<script>
 
-  window.proxyFetch('https://www.wikidata.org/w/api.php?action=query&meta=tokens&format=json')
-      .then(response => response.json())
-      .then(data => console.log('Dati ricevuti:', data))
-      .catch(error => console.error('Errore proxyFetch:', error));
 
-</script>
+  <script>
+    window.onload = function() { // Assicurati che la pagina sia completamente caricata
+      window.proxyFetch('https://www.wikidata.org/w/api.php?action=query&meta=tokens&format=json')
+        .then(response => response.json())
+        .then(data => console.log('Dati ricevuti:', data))
+        .catch(error => console.error('Errore proxyFetch:', error));
+    };
+  </script>
 </body>
 </html>
